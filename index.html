@@ -12,7 +12,7 @@
 <meta name="description" content="DMarks Lab: sites, automações e agentes de IA para negócios.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Geist:wght@300..700&family=JetBrains+Mono:wght@400;500&family=Anton&family=Bebas+Neue&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Geist:wght@300..700&family=JetBrains+Mono:wght@400;500&family=Anton&family=Bebas+Neue&family=Poppins:wght@400;600;700&display=swap">
 <style>
 /* Layout: hero escuro em tela cheia com onda de partículas (ref. Trilion) → faixa marquee → grade 2×2 clara de serviços em tipografia gigante (ref. Ezoom) → rodapé de conversão escuro. Visual único escuro/claro, sem alternância de tema. */
 :root{
@@ -113,13 +113,13 @@ h1 em{font-style:normal;color:var(--accent)}
 .cell .desc p{margin:0;font-size:15px;line-height:1.5;color:var(--muted);transition:color .45s}
 .cell .arrow{flex:none;width:46px;height:46px;border-radius:50%;border:1px solid var(--paper-line);display:grid;place-items:center;transition:all .45s}
 .cell .arrow svg{width:18px;height:18px;transition:transform .45s}
-.cell:hover::before,.cell:focus-visible::before{transform:translateY(0)}
-.cell:hover h3,.cell:focus-visible h3{color:var(--fg)}
-.cell:hover .path,.cell:focus-visible .path{color:var(--purple-soft)}
-.cell:hover .desc p,.cell:focus-visible .desc p{color:#B9C3C8}
-.cell:hover .arrow,.cell:focus-visible .arrow{background:var(--accent);border-color:var(--accent);color:var(--ink)}
-.cell:hover .arrow svg,.cell:focus-visible .arrow svg{transform:rotate(-45deg)}
-.cell:hover h3 em,.cell:focus-visible h3 em{color:var(--accent)}
+.cell:hover::before,.cell:focus-visible::before,.cell.active::before{transform:translateY(0)}
+.cell:hover h3,.cell:focus-visible h3,.cell.active h3{color:var(--fg)}
+.cell:hover .path,.cell:focus-visible .path,.cell.active .path{color:var(--purple-soft)}
+.cell:hover .desc p,.cell:focus-visible .desc p,.cell.active .desc p{color:#B9C3C8}
+.cell:hover .arrow,.cell:focus-visible .arrow,.cell.active .arrow{background:var(--accent);border-color:var(--accent);color:var(--ink)}
+.cell:hover .arrow svg,.cell:focus-visible .arrow svg,.cell.active .arrow svg{transform:rotate(-45deg)}
+.cell:hover h3 em,.cell:focus-visible h3 em,.cell.active h3 em{color:var(--accent)}
 .cell h3 em{font-style:normal;transition:color .45s}
 
 /* ---------- CASES (mosaico Ezoom) ---------- */
@@ -133,7 +133,26 @@ h1 em{font-style:normal;color:var(--accent)}
 .tile:hover .art,.tile:focus-visible .art{transform:scale(1.07);filter:brightness(.45) saturate(.8)}
 .tile .info{position:absolute;inset:auto 0 0 0;padding:18px;display:grid;gap:4px;color:#fff;opacity:0;transform:translateY(12px);transition:opacity .4s, transform .4s;z-index:2}
 .tile:hover .info,.tile:focus-visible .info{opacity:1;transform:none}
-@media (hover:none){.tile .info{opacity:1;transform:none;background:linear-gradient(to top, rgba(6,8,11,.82), transparent)}}
+@media (hover:none){
+  .tile{aspect-ratio:auto;display:flex;flex-direction:column;background:var(--ink-2)}
+  .tile .art{position:relative;inset:auto;aspect-ratio:1/1;width:100%;background:var(--c)}
+  .tile:hover .art,.tile:focus-visible .art{transform:none;filter:none}
+  .tile .info{position:static;opacity:1;transform:none;padding:12px 12px 14px;gap:3px;background:var(--ink-2);border-top:1px solid var(--paper-line)}
+  .tile .info strong{font-size:16px}
+  .tile .visit{margin-top:4px;font-size:10px}
+}
+/* Celular: projetos viram carrossel deslizante, cada card do tamanho do desktop */
+.swipe-hint{display:none}
+@media (max-width:700px){
+  .mosaic{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin-inline:calc(-1 * var(--gutter-l)) calc(-1 * var(--gutter-r));padding-inline:var(--gutter-l) var(--gutter-r);scroll-padding-inline:var(--gutter-l);scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .mosaic::-webkit-scrollbar{display:none}
+  .mosaic .tile{flex:0 0 min(82%,320px);scroll-snap-align:start;border-radius:10px;overflow:hidden}
+  .mosaic .tile{container-type:inline-size}
+  .mosaic .tile .badge{top:calc(100cqw - 34px);left:10px}
+  .tile .info span:not(.visit){display:block;font-size:13px}
+  .swipe-hint{display:flex;align-items:center;gap:8px;margin-top:16px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .swipe-hint b{color:var(--accent);font-weight:500}
+}
 .tile .info small{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
 .tile .info strong{font-family:var(--display);font-stretch:92%;font-weight:700;font-size:clamp(17px,1.7vw,22px);line-height:1.05;letter-spacing:-.01em}
 .tile .info span{font-size:13px;color:#C9D2D7;line-height:1.35}
@@ -231,6 +250,24 @@ h1 em{font-style:normal;color:var(--accent)}
 .r-wn .cta{display:flex;gap:8px;align-items:center;margin-top:2px}
 .r-wn .cta span{font-family:"Bebas Neue",Impact,sans-serif;font-size:clamp(8px,.8vw,11px);letter-spacing:.06em;background:#D71920;padding:6px 10px;border-radius:2px}
 .r-wn .cta small{font-family:"Bebas Neue",Impact,sans-serif;font-size:clamp(8px,.8vw,11px);letter-spacing:.06em;color:#F3F1EE;opacity:.8}
+
+.r-tc{position:absolute;inset:0;background:#F5F3F1;font-family:"Poppins",system-ui,sans-serif;color:#111;display:flex;flex-direction:column;overflow:hidden}
+.r-tc::before{content:"";position:absolute;left:-18%;top:-10%;width:46%;height:52%;background:#A51C2B;transform:skewX(-18deg);opacity:.9}
+.r-tc::after{content:"";position:absolute;right:-20%;bottom:-14%;width:48%;height:38%;background:#111;transform:skewX(-18deg)}
+.r-tc .top{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;background:#111;padding:4.5% 7%;color:#fff}
+.r-tc .top span{display:flex;align-items:center;gap:6px;font-weight:600;font-size:clamp(8px,.8vw,11px)}
+.r-tc .top span i{font-style:normal;width:18px;height:18px;border-radius:4px;background:#A51C2B;display:grid;place-items:center;font-size:8px;font-weight:700}
+.r-tc .top em{font-style:normal;font-size:clamp(6.5px,.6vw,9px);font-weight:600;background:#A51C2B;padding:4px 8px;border-radius:99px}
+.r-tc .body{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;padding:4% 10%}
+.r-tc h4{margin:0;font-weight:700;font-size:clamp(14px,1.45vw,20px);line-height:1.12;letter-spacing:-.01em}
+.r-tc h4 em{font-style:normal;color:#A51C2B}
+.r-tc p{margin:0;font-size:clamp(6.5px,.6vw,9px);line-height:1.45;color:#555;max-width:88%}
+.r-tc .badge-tc{width:38px;height:38px;border-radius:50%;background:#fff;border:3px solid #A51C2B;display:grid;place-items:center;font-weight:700;font-size:12px;color:#A51C2B;box-shadow:0 8px 20px rgba(0,0,0,.12)}
+.r-tc .cta{display:flex;gap:6px}
+.r-tc .cta span{font-size:clamp(6.5px,.6vw,9px);font-weight:600;padding:6px 10px;border-radius:99px;background:#A51C2B;color:#fff}
+.r-tc .cta span+span{background:transparent;color:#111;border:1px solid #111}
+
+.tile .cta{padding:0;grid-template-columns:none}
 
 /* ---------- RODAPÉ ---------- */
 footer{background:radial-gradient(70% 80% at 0% 100%, rgba(139,92,246,.22), transparent 60%), var(--ink-2)}
@@ -403,13 +440,21 @@ footer{background:radial-gradient(70% 80% at 0% 100%, rgba(139,92,246,.22), tran
           <div class="info"><small>Website · Projeto real</small><strong>Willame Nunes</strong><span>Site de instrutor de armamento e tiro com contato direto pelo WhatsApp</span><span class="visit">Ver site ↗</span></div>
         </a>
 
-        <a class="tile js-wa" href="#contato" style="--c:#E8571E;--k:#fff" data-msg="Olá! Quero um cardápio digital com pedidos no WhatsApp.">
-          <span class="badge">Conceito</span>
-          <div class="art"><div class="m-phone" style="--s:#fff;--ri:#E8571E"><div class="scr">
-            <div class="row"><i></i><b></b></div><div class="row"><i></i><b></b></div><div class="row"><i></i><b></b></div><div class="row"><i></i><b></b></div><div class="row"><i></i><b></b></div>
-          </div></div></div>
-          <div class="info"><small>Website + automação</small><strong>Bistrô Brasa</strong><span>Cardápio digital com pedido direto no WhatsApp</span></div>
+        <a class="tile real" href="https://ccmarques.github.io/tccontador/" target="_blank" rel="noopener">
+          <span class="badge">Projeto real</span>
+          <div class="art"><div class="r-tc">
+            <div class="top"><span><i>TC</i>Thiago Campos</span><em>Fale comigo</em></div>
+            <div class="body">
+              <span class="badge-tc">TC</span>
+              <h4>Contabilidade <em>descomplicada</em> para quem empreende</h4>
+              <p>Abertura de empresa, MEI e Imposto de Renda, tudo pelo WhatsApp.</p>
+              <div class="cta"><span>Falar no WhatsApp</span><span>Serviços</span></div>
+            </div>
+          </div></div>
+          <div class="info"><small>Website · Projeto real</small><strong>Thiago Campos Contador</strong><span>Site de contador em Indaiatuba-SP com atendimento pelo WhatsApp</span><span class="visit">Ver site ↗</span></div>
         </a>
+
+        
 
         
 
@@ -447,6 +492,7 @@ footer{background:radial-gradient(70% 80% at 0% 100%, rgba(139,92,246,.22), tran
         </a>
 
       </div>
+      <div class="swipe-hint" aria-hidden="true">Arraste para ver mais <b>→</b></div>
     </div>
   </section>
 </main>
@@ -491,6 +537,14 @@ const DEFAULT_MSG = "Olá! Vi o site da DMarks Lab e quero um orçamento.";
     a.href = "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(msg);
     a.target = "_blank"; a.rel = "noopener";
   });
+})();
+
+/* Toque: sem hover, o quadrado de serviço no centro da tela fica ativo */
+(function(){
+  if(!matchMedia("(hover: none)").matches || !("IntersectionObserver" in window)) return;
+  const cells=[...document.querySelectorAll(".cell")];
+  const io=new IntersectionObserver(es=>{es.forEach(e=>e.target.classList.toggle("active",e.isIntersecting));},{rootMargin:"-38% 0px -38% 0px"});
+  cells.forEach(c=>io.observe(c));
 })();
 
 /* Marquee: duplica o conteúdo para o loop contínuo */
